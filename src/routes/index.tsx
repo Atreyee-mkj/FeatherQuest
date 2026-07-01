@@ -1,29 +1,62 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useLiveQuery } from "dexie-react-hooks";
+import { AppShell, EmptyState, PageHeader } from "@/components/AppShell";
+import { db, type Sighting } from "@/lib/db";
+import { Feather, Star, Mic, Image as ImageIcon } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "FeatherQuest — Your Bird Journal" },
+      { name: "description", content: "A private, offline-first journal for your bird sightings." },
     ],
   }),
-  component: Index,
+  component: Home,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Home() {
+  const sightings: Sighting[] = useLiveQuery(
+    () => (db ? db.sightings.orderBy("createdAt").reverse().toArray() : Promise.resolve([] as Sighting[])),
+    [],
+  ) ?? [];
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <AppShell>
+      <PageHeader title="Field Journal" subtitle="Your recent sightings" />
+      {sightings.length === 0 ? (
+        <EmptyState
+          icon={<Feather className="mx-auto h-10 w-10 text-primary" />}
+          title="No sightings yet"
+          description="Tap the + button to log your first bird. Your journal lives here."
+        />
+      ) : (
+        <ul className="space-y-3 px-5">
+          {sightings.map((s) => (
+            <li
+              key={s.id}
+              className="rounded-2xl border border-border bg-card p-4 shadow-sm"
+            >
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="font-display text-lg font-semibold">{s.birdName}</h3>
+                  <p className="text-xs text-muted-foreground">
+                    {s.date} · {s.time}
+                    {s.location ? ` · ${s.location}` : ""}
+                  </p>
+                </div>
+                {s.favorite && <Star className="h-4 w-4 fill-accent text-accent" />}
+              </div>
+              {s.notes && (
+                <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{s.notes}</p>
+              )}
+              <div className="mt-2 flex gap-3 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1"><ImageIcon className="h-3 w-3" /> photos</span>
+                <span className="flex items-center gap-1"><Mic className="h-3 w-3" /> audio</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </AppShell>
   );
 }

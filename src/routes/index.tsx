@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { AppShell, EmptyState, PageHeader } from "@/components/AppShell";
-import { db } from "@/lib/db";
+import { db, type Sighting } from "@/lib/db";
 import { Feather, Star, Mic, Image as ImageIcon } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -15,8 +15,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const sightings = useLiveQuery(
-    () => (db ? db.sightings.orderBy("createdAt").reverse().toArray() : Promise.resolve([])),
+  const sightings: Sighting[] = useLiveQuery(
+    () => (db ? db.sightings.orderBy("createdAt").reverse().toArray() : Promise.resolve([] as Sighting[])),
     [],
   ) ?? [];
 

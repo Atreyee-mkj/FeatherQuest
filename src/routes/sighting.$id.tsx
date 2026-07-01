@@ -3,7 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useState } from "react";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { SightingForm } from "@/components/SightingForm";
-import { db } from "@/lib/db";
+import { db, type Sighting } from "@/lib/db";
 import { ArrowLeft, Pencil, Star, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/sighting/$id")({
@@ -33,7 +33,7 @@ function SightingDetail() {
   const [editing, setEditing] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const sighting = useLiveQuery(
+  const sighting = useLiveQuery<Sighting | undefined>(
     () => (db ? db.sightings.get(sightingId) : Promise.resolve(undefined)),
     [sightingId],
   );

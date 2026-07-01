@@ -14,6 +14,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NewRouteImport } from './routes/new'
 import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SightingIdRouteImport } from './routes/sighting.$id'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -40,6 +41,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SightingIdRoute = SightingIdRouteImport.update({
+  id: '/sighting/$id',
+  path: '/sighting/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/new': typeof NewRoute
   '/profile': typeof ProfileRoute
   '/search': typeof SearchRoute
+  '/sighting/$id': typeof SightingIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/new': typeof NewRoute
   '/profile': typeof ProfileRoute
   '/search': typeof SearchRoute
+  '/sighting/$id': typeof SightingIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,27 @@ export interface FileRoutesById {
   '/new': typeof NewRoute
   '/profile': typeof ProfileRoute
   '/search': typeof SearchRoute
+  '/sighting/$id': typeof SightingIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/achievements' | '/new' | '/profile' | '/search'
+  fullPaths:
+    | '/'
+    | '/achievements'
+    | '/new'
+    | '/profile'
+    | '/search'
+    | '/sighting/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/achievements' | '/new' | '/profile' | '/search'
-  id: '__root__' | '/' | '/achievements' | '/new' | '/profile' | '/search'
+  to: '/' | '/achievements' | '/new' | '/profile' | '/search' | '/sighting/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/achievements'
+    | '/new'
+    | '/profile'
+    | '/search'
+    | '/sighting/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +99,7 @@ export interface RootRouteChildren {
   NewRoute: typeof NewRoute
   ProfileRoute: typeof ProfileRoute
   SearchRoute: typeof SearchRoute
+  SightingIdRoute: typeof SightingIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +139,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sighting/$id': {
+      id: '/sighting/$id'
+      path: '/sighting/$id'
+      fullPath: '/sighting/$id'
+      preLoaderRoute: typeof SightingIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +155,7 @@ const rootRouteChildren: RootRouteChildren = {
   NewRoute: NewRoute,
   ProfileRoute: ProfileRoute,
   SearchRoute: SearchRoute,
+  SightingIdRoute: SightingIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

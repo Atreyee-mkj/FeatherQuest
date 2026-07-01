@@ -18,8 +18,7 @@ function Home() {
   const sightings = useLiveQuery(
     () => (db ? db.sightings.orderBy("createdAt").reverse().toArray() : Promise.resolve([])),
     [],
-    [],
-  );
+  ) ?? [];
 
   return (
     <AppShell>

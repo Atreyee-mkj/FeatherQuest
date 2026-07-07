@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { AppShell, EmptyState, PageHeader } from "@/components/AppShell";
 import { useObjectUrl } from "@/hooks/use-object-url";
-import { db, type Sighting } from "@/lib/db";
+import { db, type Sighting, type MediaAsset } from "@/lib/db";
 import { Feather, Star, Mic, Image as ImageIcon } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -48,11 +48,11 @@ function Home() {
 }
 
 function SightingCard({ sighting: s }: { sighting: Sighting }) {
-  const media = useLiveQuery(
+  const media = useLiveQuery<MediaAsset[]>(
     () =>
       db && s.id
         ? db.media.where("sightingId").equals(s.id).toArray()
-        : Promise.resolve([]),
+        : Promise.resolve([] as MediaAsset[]),
     [s.id],
   ) ?? [];
   const firstPhoto = media.find((m) => m.kind === "photo");

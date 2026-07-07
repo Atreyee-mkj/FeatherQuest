@@ -126,3 +126,53 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     </label>
   );
 }
+
+function CategorySelect({
+  value,
+  onChange,
+}: {
+  value: number | undefined;
+  onChange: (id: number | undefined) => void;
+}) {
+  const categories =
+    useLiveQuery<Category[]>(
+      () => (db ? db.categories.toArray() : Promise.resolve([] as Category[])),
+      [],
+    ) ?? [];
+  return (
+    <div className="flex flex-wrap gap-2">
+      <Chip active={value === undefined} onClick={() => onChange(undefined)}>
+        None
+      </Chip>
+      {categories.map((c) => (
+        <Chip key={c.id} active={value === c.id} onClick={() => onChange(c.id)}>
+          <span aria-hidden>{c.icon}</span> {c.name}
+        </Chip>
+      ))}
+    </div>
+  );
+}
+
+function Chip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+        active
+          ? "border-primary bg-primary text-primary-foreground"
+          : "border-border bg-card text-foreground"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}

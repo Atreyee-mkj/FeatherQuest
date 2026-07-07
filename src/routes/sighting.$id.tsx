@@ -3,6 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useState } from "react";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { SightingForm } from "@/components/SightingForm";
+import { LiveMediaSection } from "@/components/media/MediaSection";
 import { db, type Sighting } from "@/lib/db";
 import { ArrowLeft, Pencil, Star, Trash2 } from "lucide-react";
 

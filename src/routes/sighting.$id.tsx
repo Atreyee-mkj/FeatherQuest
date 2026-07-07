@@ -67,6 +67,7 @@ function SightingDetail() {
 
   async function handleDelete() {
     if (!sighting?.id) return;
+    await db.media.where("sightingId").equals(sighting.id).delete();
     await db.sightings.delete(sighting.id);
     navigate({ to: "/" });
   }
@@ -134,6 +135,12 @@ function SightingDetail() {
           <p className="whitespace-pre-wrap text-sm leading-relaxed">{sighting.notes}</p>
         </div>
       )}
+
+      <div className="mx-5 mt-5">
+        <LiveMediaSection sightingId={sightingId} />
+      </div>
+
+
 
       <div className="mt-6 flex gap-2 px-5">
         <button

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 export interface SightingFormValues {
   birdName: string;
@@ -13,7 +13,9 @@ export function SightingForm({
   submitLabel,
   onSubmit,
   onCancel,
+  extraContent,
 }: {
+  extraContent?: ReactNode;
   initial: SightingFormValues;
   submitLabel: string;
   onSubmit: (values: SightingFormValues) => Promise<void> | void;
@@ -82,6 +84,7 @@ export function SightingForm({
           className="w-full resize-none rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-ring"
         />
       </Field>
+      {extraContent}
       <div className="flex gap-2">
         {onCancel && (
           <button

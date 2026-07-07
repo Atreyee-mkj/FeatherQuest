@@ -1,6 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { SightingForm } from "@/components/SightingForm";
+import {
+  PendingMediaSection,
+  emptyPendingMedia,
+  type PendingMedia,
+} from "@/components/media/MediaSection";
 import { db } from "@/lib/db";
 
 export const Route = createFileRoute("/new")({
@@ -10,6 +16,7 @@ export const Route = createFileRoute("/new")({
 
 function NewSighting() {
   const navigate = useNavigate();
+  const [pending, setPending] = useState<PendingMedia>(emptyPendingMedia);
   const now = new Date();
 
   return (
@@ -25,8 +32,9 @@ function NewSighting() {
         }}
         submitLabel="Save sighting"
         onCancel={() => navigate({ to: "/" })}
+        extraContent={<PendingMediaSection value={pending} onChange={setPending} />}
         onSubmit={async (v) => {
-          await db.sightings.add({
+          const id = await db.sightings.add({
             birdName: v.birdName.trim(),
             date: v.date,
             time: v.time,
@@ -35,12 +43,27 @@ function NewSighting() {
             favorite: false,
             createdAt: Date.now(),
           });
+          if (pending.photos.length || pending.audios.length) {
+            await db.media.bulkAdd([
+              ...pending.photos.map((p) => ({
+                sightingId: id,
+                kind: "photo" as const,
+                blob: p.blob,
+                mimeType: p.blob.type || "image/jpeg",
+                createdAt: Date.now(),
+              })),
+              ...pending.audios.map((a) => ({
+                sightingId: id,
+                kind: "audio" as const,
+                blob: a.blob,
+                mimeType: a.mimeType,
+                createdAt: Date.now(),
+              })),
+            ]);
+          }
           navigate({ to: "/" });
         }}
       />
-      <p className="mt-4 px-5 pb-4 text-center text-xs text-muted-foreground">
-        Photos and audio recording come online in Phase 4.
-      </p>
     </AppShell>
   );
 }

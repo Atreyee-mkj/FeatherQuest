@@ -1,4 +1,6 @@
 import { useState, type ReactNode } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db, type Category } from "@/lib/db";
 
 export interface SightingFormValues {
   birdName: string;
@@ -6,6 +8,7 @@ export interface SightingFormValues {
   time: string;
   location: string;
   notes: string;
+  categoryId?: number;
 }
 
 export function SightingForm({
@@ -73,6 +76,12 @@ export function SightingForm({
           onChange={(e) => update("location", e.target.value)}
           placeholder="Backyard oak tree"
           className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+        />
+      </Field>
+      <Field label="Category">
+        <CategorySelect
+          value={values.categoryId}
+          onChange={(id) => update("categoryId", id)}
         />
       </Field>
       <Field label="Notes">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 export interface SightingFormValues {
   birdName: string;
@@ -13,7 +13,9 @@ export function SightingForm({
   submitLabel,
   onSubmit,
   onCancel,
+  extraContent,
 }: {
+  extraContent?: ReactNode;
   initial: SightingFormValues;
   submitLabel: string;
   onSubmit: (values: SightingFormValues) => Promise<void> | void;

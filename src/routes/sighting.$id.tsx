@@ -83,6 +83,7 @@ function SightingDetail() {
             time: sighting.time,
             location: sighting.location ?? "",
             notes: sighting.notes ?? "",
+            categoryId: sighting.categoryId,
           }}
           submitLabel="Save changes"
           onCancel={() => setEditing(false)}
@@ -93,6 +94,7 @@ function SightingDetail() {
               time: v.time,
               location: v.location.trim() || undefined,
               notes: v.notes.trim() || undefined,
+              categoryId: v.categoryId,
             });
             setEditing(false);
           }}

@@ -40,6 +40,7 @@ function NewSighting() {
             time: v.time,
             location: v.location.trim() || undefined,
             notes: v.notes.trim() || undefined,
+            categoryId: v.categoryId,
             favorite: false,
             createdAt: Date.now(),
           });

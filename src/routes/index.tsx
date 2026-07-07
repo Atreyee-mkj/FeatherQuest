@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { AppShell, EmptyState, PageHeader } from "@/components/AppShell";
 import { useObjectUrl } from "@/hooks/use-object-url";
-import { db, type Sighting, type MediaAsset } from "@/lib/db";
+import { db, type Sighting, type MediaAsset, type Category } from "@/lib/db";
 import { Feather, Star, Mic, Image as ImageIcon } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -24,6 +24,12 @@ function Home() {
           : Promise.resolve([] as Sighting[]),
       [],
     ) ?? [];
+  const categories =
+    useLiveQuery<Category[]>(
+      () => (db ? db.categories.toArray() : Promise.resolve([] as Category[])),
+      [],
+    ) ?? [];
+  const catById = new Map(categories.map((c) => [c.id!, c]));
 
   return (
     <AppShell>
@@ -38,7 +44,10 @@ function Home() {
         <ul className="space-y-3 px-5">
           {sightings.map((s) => (
             <li key={s.id}>
-              <SightingCard sighting={s} />
+              <SightingCard
+                sighting={s}
+                category={s.categoryId ? catById.get(s.categoryId) : undefined}
+              />
             </li>
           ))}
         </ul>
@@ -47,7 +56,13 @@ function Home() {
   );
 }
 
-function SightingCard({ sighting: s }: { sighting: Sighting }) {
+function SightingCard({
+  sighting: s,
+  category,
+}: {
+  sighting: Sighting;
+  category?: Category;
+}) {
   const media = useLiveQuery<MediaAsset[]>(
     () =>
       db && s.id
@@ -89,20 +104,26 @@ function SightingCard({ sighting: s }: { sighting: Sighting }) {
         {s.notes && (
           <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{s.notes}</p>
         )}
-        {(photoCount > 0 || audioCount > 0) && (
-          <div className="mt-1.5 flex gap-3 text-xs text-muted-foreground">
-            {photoCount > 0 && (
-              <span className="flex items-center gap-1">
-                <ImageIcon className="h-3 w-3" /> {photoCount}
-              </span>
-            )}
-            {audioCount > 0 && (
-              <span className="flex items-center gap-1">
-                <Mic className="h-3 w-3" /> {audioCount}
-              </span>
-            )}
-          </div>
-        )}
+        <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+          {category && (
+            <span
+              className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold"
+              style={{ backgroundColor: `${category.color}22`, color: category.color }}
+            >
+              <span aria-hidden>{category.icon}</span> {category.name}
+            </span>
+          )}
+          {photoCount > 0 && (
+            <span className="flex items-center gap-1">
+              <ImageIcon className="h-3 w-3" /> {photoCount}
+            </span>
+          )}
+          {audioCount > 0 && (
+            <span className="flex items-center gap-1">
+              <Mic className="h-3 w-3" /> {audioCount}
+            </span>
+          )}
+        </div>
       </div>
     </Link>
   );

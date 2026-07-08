@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { AppShell, PageHeader } from "@/components/AppShell";
+import { CategoryManager } from "@/components/CategoryManager";
 import { db } from "@/lib/db";
 import appIcon from "@/assets/app-icon.png";
+
 
 export const Route = createFileRoute("/profile")({
   head: () => ({ meta: [{ title: "Profile — FeatherQuest" }] }),
@@ -37,10 +39,13 @@ function Profile() {
         <Stat label="Favorites" value={stats.favorites} />
       </div>
 
-      <div className="mt-6 space-y-2 px-5">
+      <div className="mt-6 px-5">
+        <CategoryManager />
+      </div>
+
+      <div className="mt-4 space-y-2 px-5">
         <Row label="Dark mode" hint="Coming in Phase 10" />
         <Row label="Backup / Export" hint="Coming in Phase 9" />
-        <Row label="Categories" hint="Manage in Phase 6" />
       </div>
     </AppShell>
   );

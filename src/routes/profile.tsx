@@ -13,13 +13,16 @@ export const Route = createFileRoute("/profile")({
 
 function Profile() {
   const stats = useLiveQuery(async () => {
-    if (!db) return { total: 0, species: 0, categories: 0, favorites: 0 };
+    if (!db) return { total: 0, species: 0, categories: 0, favorites: 0, photos: 0, audios: 0 };
     const all = await db.sightings.toArray();
-    const species = new Set(all.map((s) => s.birdName.toLowerCase())).size;
+    const species = new Set(all.map((s) => s.birdName.trim().toLowerCase()).filter(Boolean)).size;
     const categories = await db.categories.count();
     const favorites = all.filter((s) => s.favorite).length;
-    return { total: all.length, species, categories, favorites };
-  }, [], { total: 0, species: 0, categories: 0, favorites: 0 });
+    const photos = await db.media.where("kind").equals("photo").count();
+    const audios = await db.media.where("kind").equals("audio").count();
+    return { total: all.length, species, categories, favorites, photos, audios };
+  }, [], { total: 0, species: 0, categories: 0, favorites: 0, photos: 0, audios: 0 });
+
 
   return (
     <AppShell>
@@ -35,9 +38,12 @@ function Profile() {
       <div className="mt-5 grid grid-cols-2 gap-3 px-5">
         <Stat label="Sightings" value={stats.total} />
         <Stat label="Unique species" value={stats.species} />
+        <Stat label="Photos" value={stats.photos} />
+        <Stat label="Recordings" value={stats.audios} />
         <Stat label="Categories" value={stats.categories} />
         <Stat label="Favorites" value={stats.favorites} />
       </div>
+
 
       <div className="mt-6 px-5">
         <CategoryManager />

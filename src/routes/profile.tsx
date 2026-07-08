@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { AppShell, PageHeader } from "@/components/AppShell";
+import { CategoryManager } from "@/components/CategoryManager";
 import { db } from "@/lib/db";
 import appIcon from "@/assets/app-icon.png";
+
 
 export const Route = createFileRoute("/profile")({
   head: () => ({ meta: [{ title: "Profile — FeatherQuest" }] }),

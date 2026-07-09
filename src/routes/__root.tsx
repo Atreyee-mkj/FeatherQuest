@@ -77,14 +77,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "FeatherQuest — Your Offline Bird Journal" },
+      {
+        name: "description",
+        content:
+          "FeatherQuest is a private, offline-first birdwatching journal for photos, audio, and field notes.",
+      },
+      { name: "author", content: "FeatherQuest" },
+      { name: "theme-color", content: "#1a3c2a" },
+      { property: "og:title", content: "FeatherQuest — Your Offline Bird Journal" },
+      {
+        property: "og:description",
+        content:
+          "A private, offline-first birdwatching journal for photos, audio, and field notes.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -93,6 +101,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        children: `(function(){try{var s=localStorage.getItem('featherquest:theme');var d=s?s==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark');}catch(e){}})();`,
       },
     ],
   }),

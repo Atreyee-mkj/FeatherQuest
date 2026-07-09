@@ -53,10 +53,48 @@ function Profile() {
       </div>
 
       <div className="mt-4 space-y-2 px-5">
+        <BackupRow />
         <Row label="Dark mode" hint="Coming in Phase 10" />
-        <Row label="Backup / Export" hint="Coming in Phase 9" />
       </div>
     </AppShell>
+  );
+}
+
+function BackupRow() {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  async function handleExport() {
+    setBusy(true);
+    setError(null);
+    try {
+      await downloadBackup();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Export failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <div className="rounded-xl border border-border bg-card px-4 py-3">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-medium">Backup &amp; export</p>
+          <p className="text-xs text-muted-foreground">
+            Download a ZIP with all sightings, photos, and audio.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={handleExport}
+          disabled={busy}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-60"
+        >
+          {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
+          {busy ? "Preparing…" : "Export"}
+        </button>
+      </div>
+      {error && <p className="mt-2 text-xs text-destructive">{error}</p>}
+    </div>
   );
 }
 

@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useState } from "react";
-import { Download, Loader2 } from "lucide-react";
+import { Download, Loader2, Moon, Sun } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { CategoryManager } from "@/components/CategoryManager";
 import { db } from "@/lib/db";

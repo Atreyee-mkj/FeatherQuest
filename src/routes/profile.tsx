@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useState } from "react";
-import { Download, Loader2 } from "lucide-react";
+import { Download, Loader2, Moon, Sun } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { CategoryManager } from "@/components/CategoryManager";
 import { db } from "@/lib/db";
@@ -54,9 +55,35 @@ function Profile() {
 
       <div className="mt-4 space-y-2 px-5">
         <BackupRow />
-        <Row label="Dark mode" hint="Coming in Phase 10" />
+        <DarkModeRow />
       </div>
     </AppShell>
+  );
+}
+
+function DarkModeRow() {
+  const { theme, toggle, ready } = useTheme();
+  const on = theme === "dark";
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      disabled={!ready}
+      className="flex w-full items-center justify-between rounded-xl border border-border bg-card px-4 py-3 text-left transition hover:bg-accent/20"
+    >
+      <div className="flex items-center gap-3">
+        {on ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+        <span className="text-sm font-medium">Dark mode</span>
+      </div>
+      <span
+        aria-hidden
+        className={`relative h-6 w-11 rounded-full transition ${on ? "bg-primary" : "bg-muted"}`}
+      >
+        <span
+          className={`absolute top-0.5 h-5 w-5 rounded-full bg-background shadow transition-transform ${on ? "translate-x-5" : "translate-x-0.5"}`}
+        />
+      </span>
+    </button>
   );
 }
 
@@ -107,11 +134,3 @@ function Stat({ label, value }: { label: string; value: number }) {
   );
 }
 
-function Row({ label, hint }: { label: string; hint: string }) {
-  return (
-    <div className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3">
-      <span className="text-sm font-medium">{label}</span>
-      <span className="text-xs text-muted-foreground">{hint}</span>
-    </div>
-  );
-}

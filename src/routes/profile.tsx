@@ -54,9 +54,35 @@ function Profile() {
 
       <div className="mt-4 space-y-2 px-5">
         <BackupRow />
-        <Row label="Dark mode" hint="Coming in Phase 10" />
+        <DarkModeRow />
       </div>
     </AppShell>
+  );
+}
+
+function DarkModeRow() {
+  const { theme, toggle, ready } = useTheme();
+  const on = theme === "dark";
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      disabled={!ready}
+      className="flex w-full items-center justify-between rounded-xl border border-border bg-card px-4 py-3 text-left transition hover:bg-accent/20"
+    >
+      <div className="flex items-center gap-3">
+        {on ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+        <span className="text-sm font-medium">Dark mode</span>
+      </div>
+      <span
+        aria-hidden
+        className={`relative h-6 w-11 rounded-full transition ${on ? "bg-primary" : "bg-muted"}`}
+      >
+        <span
+          className={`absolute top-0.5 h-5 w-5 rounded-full bg-background shadow transition-transform ${on ? "translate-x-5" : "translate-x-0.5"}`}
+        />
+      </span>
+    </button>
   );
 }
 

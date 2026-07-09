@@ -1,8 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
+import { useState } from "react";
+import { Download, Loader2 } from "lucide-react";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { CategoryManager } from "@/components/CategoryManager";
 import { db } from "@/lib/db";
+import { downloadBackup } from "@/lib/backup";
 import appIcon from "@/assets/app-icon.png";
 
 

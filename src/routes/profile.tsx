@@ -134,11 +134,3 @@ function Stat({ label, value }: { label: string; value: number }) {
   );
 }
 
-function Row({ label, hint }: { label: string; hint: string }) {
-  return (
-    <div className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3">
-      <span className="text-sm font-medium">{label}</span>
-      <span className="text-xs text-muted-foreground">{hint}</span>
-    </div>
-  );
-}

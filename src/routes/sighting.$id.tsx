@@ -84,10 +84,19 @@ function SightingDetail() {
             location: sighting.location ?? "",
             notes: sighting.notes ?? "",
             categoryId: sighting.categoryId,
+            mood: sighting.mood,
+            rarity: sighting.rarity,
+            behaviors: sighting.behaviors ?? [],
+            weatherCondition: sighting.weather?.condition,
+            weatherTempC: sighting.weather?.tempC,
           }}
           submitLabel="Save changes"
           onCancel={() => setEditing(false)}
           onSubmit={async (v) => {
+            const weather =
+              v.weatherCondition || v.weatherTempC != null
+                ? { condition: v.weatherCondition, tempC: v.weatherTempC }
+                : undefined;
             await db.sightings.update(sightingId, {
               birdName: v.birdName.trim(),
               date: v.date,
@@ -95,6 +104,10 @@ function SightingDetail() {
               location: v.location.trim() || undefined,
               notes: v.notes.trim() || undefined,
               categoryId: v.categoryId,
+              mood: v.mood,
+              rarity: v.rarity,
+              behaviors: v.behaviors.length ? v.behaviors : undefined,
+              weather,
             });
             setEditing(false);
           }}

@@ -7,6 +7,7 @@ import { AppShell, PageHeader } from "@/components/AppShell";
 import { CategoryManager } from "@/components/CategoryManager";
 import { db } from "@/lib/db";
 import { downloadBackup } from "@/lib/backup";
+import { computeRichStats } from "@/lib/stats";
 import appIcon from "@/assets/app-icon.png";
 
 
@@ -27,6 +28,10 @@ function Profile() {
     return { total: all.length, species, categories, favorites, photos, audios };
   }, [], { total: 0, species: 0, categories: 0, favorites: 0, photos: 0, audios: 0 });
 
+  // Re-derive whenever sightings/media/categories change
+  const sightingCount = useLiveQuery(() => (db ? db.sightings.count() : Promise.resolve(0)), []) ?? 0;
+  const catCount = useLiveQuery(() => (db ? db.categories.count() : Promise.resolve(0)), []) ?? 0;
+  const rich = useLiveQuery(() => computeRichStats(), [sightingCount, catCount]);
 
   return (
     <AppShell>
@@ -38,6 +43,35 @@ function Profile() {
           <p className="text-xs text-muted-foreground">Your private field journal</p>
         </div>
       </div>
+
+      {rich && stats.total > 0 && (
+        <div className="mx-5 mt-5 rounded-2xl border border-border bg-card p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            {rich.monthLabel}
+          </p>
+          <p className="mt-1 font-display text-2xl font-semibold">
+            {rich.monthCount} {rich.monthCount === 1 ? "sighting" : "sightings"}
+          </p>
+          <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full rounded-full bg-primary transition-all"
+              style={{
+                width: `${
+                  rich.bestMonthCount > 0
+                    ? Math.max(4, Math.round((rich.monthCount / rich.bestMonthCount) * 100))
+                    : 0
+                }%`,
+              }}
+            />
+          </div>
+          <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+            <RichRow label="Most active day" value={rich.mostActiveWeekday ?? "—"} />
+            <RichRow label="Most seen species" value={rich.mostSeenSpecies ?? "—"} />
+            <RichRow label="Longest streak" value={`${rich.longestStreak} ${rich.longestStreak === 1 ? "day" : "days"}`} />
+            <RichRow label="Favorite habitat" value={rich.favoriteHabitat ?? "—"} />
+          </dl>
+        </div>
+      )}
 
       <div className="mt-5 grid grid-cols-2 gap-3 px-5">
         <Stat label="Sightings" value={stats.total} />
@@ -130,6 +164,15 @@ function Stat({ label, value }: { label: string; value: number }) {
     <div className="rounded-2xl border border-border bg-card p-4">
       <p className="font-display text-3xl font-semibold">{value}</p>
       <p className="mt-1 text-xs text-muted-foreground">{label}</p>
+    </div>
+  );
+}
+
+function RichRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-xs text-muted-foreground">{label}</dt>
+      <dd className="mt-0.5 font-semibold">{value}</dd>
     </div>
   );
 }

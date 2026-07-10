@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useObjectUrl } from "@/hooks/use-object-url";
 import { db, type Sighting, type MediaAsset, type Category } from "@/lib/db";
+import { moodOf, rarityOf } from "@/lib/journal-meta";
 import { Feather, Star, Mic, Image as ImageIcon } from "lucide-react";
 
 export function SightingCard({
@@ -48,12 +49,30 @@ export function SightingCard({
               {s.location ? ` · ${s.location}` : ""}
             </p>
           </div>
-          {s.favorite && <Star className="h-4 w-4 flex-shrink-0 fill-accent text-accent" />}
+          <div className="flex flex-shrink-0 items-center gap-1">
+            {moodOf(s.mood) && (
+              <span aria-hidden className="text-base leading-none">
+                {moodOf(s.mood)!.emoji}
+              </span>
+            )}
+            {s.favorite && <Star className="h-4 w-4 fill-accent text-accent" />}
+          </div>
         </div>
         {s.notes && (
           <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{s.notes}</p>
         )}
         <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+          {rarityOf(s.rarity) && (
+            <span
+              className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                s.rarity === "lifer"
+                  ? "bg-accent text-accent-foreground"
+                  : "bg-muted text-foreground"
+              }`}
+            >
+              {rarityOf(s.rarity)!.label}
+            </span>
+          )}
           {category && (
             <span
               className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold"

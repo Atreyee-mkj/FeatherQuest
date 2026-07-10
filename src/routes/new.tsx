@@ -29,11 +29,16 @@ function NewSighting() {
           time: now.toTimeString().slice(0, 5),
           location: "",
           notes: "",
+          behaviors: [],
         }}
         submitLabel="Save sighting"
         onCancel={() => navigate({ to: "/" })}
         extraContent={<PendingMediaSection value={pending} onChange={setPending} />}
         onSubmit={async (v) => {
+          const weather =
+            v.weatherCondition || v.weatherTempC != null
+              ? { condition: v.weatherCondition, tempC: v.weatherTempC }
+              : undefined;
           const id = await db.sightings.add({
             birdName: v.birdName.trim(),
             date: v.date,
@@ -43,6 +48,10 @@ function NewSighting() {
             categoryId: v.categoryId,
             favorite: false,
             createdAt: Date.now(),
+            mood: v.mood,
+            rarity: v.rarity,
+            behaviors: v.behaviors.length ? v.behaviors : undefined,
+            weather,
           });
           if (pending.photos.length || pending.audios.length) {
             await db.media.bulkAdd([

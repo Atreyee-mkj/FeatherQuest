@@ -10,6 +10,11 @@ export interface Sighting {
   categoryId?: number;
   favorite: boolean;
   createdAt: number;
+  // Phase 13 — journal enrichments (all optional, back-compatible)
+  mood?: string; // MoodId
+  rarity?: string; // RarityId
+  behaviors?: string[]; // BehaviorId[]
+  weather?: { condition?: string; tempC?: number };
 }
 
 export interface MediaAsset {
@@ -43,6 +48,14 @@ class FeatherQuestDB extends Dexie {
   constructor() {
     super("featherquest");
     this.version(1).stores({
+      sightings: "++id, birdName, date, categoryId, favorite, createdAt",
+      media: "++id, sightingId, kind, createdAt",
+      categories: "++id, name",
+      badges: "id, unlocked",
+    });
+    // v2 — no index changes; new fields on Sighting are non-indexed and
+    // default to undefined on existing rows.
+    this.version(2).stores({
       sightings: "++id, birdName, date, categoryId, favorite, createdAt",
       media: "++id, sightingId, kind, createdAt",
       categories: "++id, name",

@@ -209,3 +209,61 @@ function SightingDetail() {
     </AppShell>
   );
 }
+
+function JournalMeta({ sighting }: { sighting: Sighting }) {
+  const mood = moodOf(sighting.mood);
+  const rarity = rarityOf(sighting.rarity);
+  const weather = weatherOf(sighting.weather?.condition);
+  const tempC = sighting.weather?.tempC;
+  const behaviors = (sighting.behaviors ?? [])
+    .map((id) => behaviorOf(id))
+    .filter((b): b is NonNullable<typeof b> => !!b);
+  const hasAny =
+    mood || rarity || weather || tempC != null || behaviors.length > 0;
+  if (!hasAny) return null;
+
+  return (
+    <div className="mx-5 mt-5 space-y-3 rounded-2xl border border-border bg-card p-4">
+      <div className="flex flex-wrap items-center gap-2">
+        {rarity && (
+          <span
+            className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
+              rarity.id === "lifer"
+                ? "bg-accent text-accent-foreground shadow shadow-accent/30"
+                : "bg-muted text-foreground"
+            }`}
+          >
+            {rarity.label}
+          </span>
+        )}
+        {mood && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-semibold">
+            <span aria-hidden>{mood.emoji}</span> {mood.label}
+          </span>
+        )}
+        {(weather || tempC != null) && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-semibold">
+            {weather && (
+              <>
+                <span aria-hidden>{weather.emoji}</span> {weather.label}
+              </>
+            )}
+            {tempC != null && <span>· {tempC}°C</span>}
+          </span>
+        )}
+      </div>
+      {behaviors.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {behaviors.map((b) => (
+            <span
+              key={b.id}
+              className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs"
+            >
+              <span aria-hidden>{b.emoji}</span> {b.label}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

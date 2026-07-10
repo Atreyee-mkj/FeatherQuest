@@ -7,6 +7,7 @@ import { AppShell, PageHeader } from "@/components/AppShell";
 import { CategoryManager } from "@/components/CategoryManager";
 import { db } from "@/lib/db";
 import { downloadBackup } from "@/lib/backup";
+import { computeRichStats } from "@/lib/stats";
 import appIcon from "@/assets/app-icon.png";
 
 

@@ -5,6 +5,7 @@ import { AppShell, PageHeader } from "@/components/AppShell";
 import { SightingForm } from "@/components/SightingForm";
 import { LiveMediaSection } from "@/components/media/MediaSection";
 import { db, type Sighting } from "@/lib/db";
+import { behaviorOf, moodOf, rarityOf, weatherOf } from "@/lib/journal-meta";
 import { ArrowLeft, Pencil, Star, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/sighting/$id")({
@@ -141,6 +142,8 @@ function SightingDetail() {
           {sighting.location ? ` · ${sighting.location}` : ""}
         </p>
       </div>
+
+      <JournalMeta sighting={sighting} />
 
       {sighting.notes && (
         <div className="mx-5 mt-5 rounded-2xl border border-border bg-card p-4">

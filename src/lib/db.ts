@@ -56,6 +56,7 @@ class FeatherQuestDB extends Dexie {
   media!: Table<MediaAsset, number>;
   categories!: Table<Category, number>;
   badges!: Table<Badge, string>;
+  profile!: Table<Profile, "me">;
 
   constructor() {
     super("featherquest");
@@ -65,16 +66,23 @@ class FeatherQuestDB extends Dexie {
       categories: "++id, name",
       badges: "id, unlocked",
     });
-    // v2 — no index changes; new fields on Sighting are non-indexed and
-    // default to undefined on existing rows.
     this.version(2).stores({
       sightings: "++id, birdName, date, categoryId, favorite, createdAt",
       media: "++id, sightingId, kind, createdAt",
       categories: "++id, name",
       badges: "id, unlocked",
     });
+    // v3 — add profile store; existing tables unchanged.
+    this.version(3).stores({
+      sightings: "++id, birdName, date, categoryId, favorite, createdAt",
+      media: "++id, sightingId, kind, createdAt",
+      categories: "++id, name",
+      badges: "id, unlocked",
+      profile: "id",
+    });
   }
 }
+
 
 export const db = typeof window !== "undefined" ? new FeatherQuestDB() : (null as unknown as FeatherQuestDB);
 

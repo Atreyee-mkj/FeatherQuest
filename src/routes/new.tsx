@@ -52,7 +52,9 @@ function NewSighting() {
             rarity: v.rarity,
             behaviors: v.behaviors.length ? v.behaviors : undefined,
             weather,
+            count: v.count && v.count > 1 ? v.count : undefined,
           });
+
           if (pending.photos.length || pending.audios.length) {
             await db.media.bulkAdd([
               ...pending.photos.map((p) => ({

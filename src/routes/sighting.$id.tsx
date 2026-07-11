@@ -221,9 +221,11 @@ function JournalMeta({ sighting }: { sighting: Sighting }) {
   const behaviors = (sighting.behaviors ?? [])
     .map((id) => behaviorOf(id))
     .filter((b): b is NonNullable<typeof b> => !!b);
+  const count = sighting.count && sighting.count > 1 ? sighting.count : null;
   const hasAny =
-    mood || rarity || weather || tempC != null || behaviors.length > 0;
+    mood || rarity || weather || tempC != null || behaviors.length > 0 || count;
   if (!hasAny) return null;
+
 
   return (
     <div className="mx-5 mt-5 space-y-3 rounded-2xl border border-border bg-card p-4">

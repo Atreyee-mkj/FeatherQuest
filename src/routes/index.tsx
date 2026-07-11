@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { AppShell, EmptyState, PageHeader } from "@/components/AppShell";
 import { SightingCard } from "@/components/SightingCard";
+import { OnThisDay } from "@/components/OnThisDay";
 import { db, type Sighting, type Category } from "@/lib/db";
 import { Feather } from "lucide-react";
 
@@ -34,6 +35,7 @@ function Home() {
   return (
     <AppShell>
       <PageHeader title="Field Journal" subtitle="Your recent sightings" />
+      <OnThisDay />
       {sightings.length === 0 ? (
         <EmptyState
           icon={<Feather className="mx-auto h-10 w-10 text-primary" />}
@@ -55,4 +57,5 @@ function Home() {
     </AppShell>
   );
 }
+
 

@@ -15,7 +15,19 @@ export interface Sighting {
   rarity?: string; // RarityId
   behaviors?: string[]; // BehaviorId[]
   weather?: { condition?: string; tempC?: number };
+  // Phase 2 expansion — number of birds observed
+  count?: number;
 }
+
+export interface Profile {
+  id: "me";
+  displayName?: string;
+  bio?: string;
+  avatarBlob?: Blob;
+  avatarMime?: string;
+  updatedAt: number;
+}
+
 
 export interface MediaAsset {
   id?: number;

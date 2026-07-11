@@ -40,8 +40,13 @@ function Profile() {
   const catCount = useLiveQuery(() => (db ? db.categories.count() : Promise.resolve(0)), []) ?? 0;
   const rich = useLiveQuery(() => computeRichStats(), [sightingCount, catCount]);
   const profile = useLiveQuery(() => getProfile(), []);
-  const badges = useLiveQuery(() => (db ? db.badges.toArray() : Promise.resolve([])), []) ?? [];
+  const badges =
+    useLiveQuery(
+      () => (db ? db.badges.toArray() : Promise.resolve([] as import("@/lib/db").Badge[])),
+      [],
+    ) ?? [];
   const unlocked = BADGES.filter((b) => badges.find((x) => x.id === b.id)?.unlocked);
+
 
   return (
     <AppShell>

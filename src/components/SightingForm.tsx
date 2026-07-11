@@ -20,7 +20,9 @@ export interface SightingFormValues {
   behaviors: string[];
   weatherCondition?: string;
   weatherTempC?: number;
+  count?: number;
 }
+
 
 export function SightingForm({
   initial,

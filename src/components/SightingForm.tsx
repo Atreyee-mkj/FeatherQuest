@@ -20,7 +20,9 @@ export interface SightingFormValues {
   behaviors: string[];
   weatherCondition?: string;
   weatherTempC?: number;
+  count?: number;
 }
+
 
 export function SightingForm({
   initial,
@@ -103,23 +105,42 @@ export function SightingForm({
         />
       </Field>
 
-      <Field label="Rarity">
-        <div className="flex flex-wrap gap-2">
-          <Chip active={!values.rarity} onClick={() => update("rarity", undefined)}>
-            —
-          </Chip>
-          {RARITIES.map((r) => (
-            <Chip
-              key={r.id}
-              active={values.rarity === r.id}
-              onClick={() => update("rarity", values.rarity === r.id ? undefined : r.id)}
-              highlight={r.id === "lifer"}
-            >
-              {r.label}
+      <div className="grid grid-cols-[1fr_auto] gap-3">
+        <Field label="Rarity">
+          <div className="flex flex-wrap gap-2">
+            <Chip active={!values.rarity} onClick={() => update("rarity", undefined)}>
+              —
             </Chip>
-          ))}
-        </div>
-      </Field>
+            {RARITIES.map((r) => (
+              <Chip
+                key={r.id}
+                active={values.rarity === r.id}
+                onClick={() => update("rarity", values.rarity === r.id ? undefined : r.id)}
+                highlight={r.id === "lifer"}
+              >
+                {r.label}
+              </Chip>
+            ))}
+          </div>
+        </Field>
+        <Field label="How many?">
+          <input
+            type="number"
+            inputMode="numeric"
+            min={1}
+            value={values.count ?? ""}
+            onChange={(e) =>
+              update(
+                "count",
+                e.target.value === "" ? undefined : Math.max(1, Number(e.target.value)),
+              )
+            }
+            placeholder="1"
+            className="w-20 rounded-xl border border-border bg-card px-3 py-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+          />
+        </Field>
+      </div>
+
 
       <Field label="Mood">
         <div className="flex flex-wrap gap-2">

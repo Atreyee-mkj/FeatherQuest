@@ -90,6 +90,7 @@ function SightingDetail() {
             behaviors: sighting.behaviors ?? [],
             weatherCondition: sighting.weather?.condition,
             weatherTempC: sighting.weather?.tempC,
+            count: sighting.count,
           }}
           submitLabel="Save changes"
           onCancel={() => setEditing(false)}
@@ -109,9 +110,11 @@ function SightingDetail() {
               rarity: v.rarity,
               behaviors: v.behaviors.length ? v.behaviors : undefined,
               weather,
+              count: v.count && v.count > 1 ? v.count : undefined,
             });
             setEditing(false);
           }}
+
         />
       </AppShell>
     );
@@ -218,9 +221,11 @@ function JournalMeta({ sighting }: { sighting: Sighting }) {
   const behaviors = (sighting.behaviors ?? [])
     .map((id) => behaviorOf(id))
     .filter((b): b is NonNullable<typeof b> => !!b);
+  const count = sighting.count && sighting.count > 1 ? sighting.count : null;
   const hasAny =
-    mood || rarity || weather || tempC != null || behaviors.length > 0;
+    mood || rarity || weather || tempC != null || behaviors.length > 0 || count;
   if (!hasAny) return null;
+
 
   return (
     <div className="mx-5 mt-5 space-y-3 rounded-2xl border border-border bg-card p-4">
@@ -236,7 +241,13 @@ function JournalMeta({ sighting }: { sighting: Sighting }) {
             {rarity.label}
           </span>
         )}
+        {count && (
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
+            ×{count} observed
+          </span>
+        )}
         {mood && (
+
           <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-semibold">
             <span aria-hidden>{mood.emoji}</span> {mood.label}
           </span>

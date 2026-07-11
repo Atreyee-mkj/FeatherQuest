@@ -73,6 +73,11 @@ export function SightingCard({
               {rarityOf(s.rarity)!.label}
             </span>
           )}
+          {s.count && s.count > 1 && (
+            <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
+              ×{s.count}
+            </span>
+          )}
           {category && (
             <span
               className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold"
@@ -92,6 +97,7 @@ export function SightingCard({
             </span>
           )}
         </div>
+
       </div>
     </Link>
   );

@@ -1,65 +1,103 @@
-## Overview
+## FeatherQuest — Phase 2 Feature Expansion
 
-Expand FeatherQuest with journal-style enrichments: 5 new badges, a real stats dashboard, and per-sighting mood/rarity/behavior/weather fields. All offline, all local.
+A large but cohesive set of enhancements. All offline-first, all local storage. Grouped into 6 workstreams that can be built in one pass.
 
-## 1. Data model (`src/lib/db.ts`)
+---
 
-Bump Dexie to **version 2** with new optional fields on `Sighting` (all optional so existing records keep working — no migration script needed):
+### 1. Profile foundations (`src/lib/profile.ts` new, `src/routes/profile.tsx`)
 
-- `mood?: "amazed" | "peaceful" | "excited" | "proud"`
-- `rarity?: "common" | "uncommon" | "rare" | "lifer"`
-- `behaviors?: string[]` (singing, flying, feeding, nesting, perched, hunting)
-- `weather?: { condition?: string; tempC?: number }` — free-form, user-entered (no network calls, offline-first)
+Add a lightweight local profile stored in Dexie (new `profile` table, single row keyed `me`):
+- `displayName?: string`
+- `avatarBlob?: Blob` (from camera or gallery)
+- `bio?: string` ("Birdwatching summary")
 
-## 2. New badges (`src/lib/badges.ts`)
+New profile page layout:
+- Large avatar (tap to change → reuse `PhotoPicker` pattern with camera + gallery)
+- Editable display name + one-line summary (inline edit → save on blur)
+- Achievement strip (top 4 unlocked badges + "View all")
+- Personal statistics (existing rich stats)
+- Dark mode toggle + Backup shortcuts (already there — polished)
+- New: **Share stats card** button
 
-Add to `Stats`: `earliestHour`, `latestHour`, `weekendMonthStreak`.
+### 2. Shareable statistics card (`src/components/ShareCard.tsx` new)
 
-New defs:
-- 🌄 **Sunrise Birder** — any sighting with time < 07:00
-- 🌙 **Night Owl** — any sighting with time ≥ 19:00
-- 🚶 **Trail Walker** — 100 sightings
-- 🌈 **Weekend Warrior** — at least one sighting on every Sat+Sun of the last 4 weekends
-- 🪶 **Feather Collector** — 100 total observations (same threshold as Trail Walker but framed on observations count including re-sightings; keep both, they unlock together at 100)
+Render a poster-style card (600×900) into an offscreen `<div>`, then rasterize with **html-to-image** (bundled, no network). Card contains:
+- Avatar + display name
+- Total sightings · unique species · photos · recordings
+- Current streak + longest streak
+- Grid of unlocked badge icons (up to 8, "+N more")
+- "FeatherQuest" wordmark footer
 
-## 3. Sighting form (`src/components/SightingForm.tsx`)
+Actions:
+- **Save as image** → download PNG
+- **Share** → use `navigator.share({ files: [pngFile] })` when available (mobile), fall back to download + copy hint
 
-Add four new sections rendered as chip groups / simple inputs:
-- **Mood** — 4 emoji chips (single select)
-- **Rarity** — 4 chips (single select), "Lifer" highlighted
-- **Behavior** — 6 chips (multi-select)
-- **Weather** — condition chips (☀️ Sunny, ⛅ Cloudy, 🌧 Rainy, ❄️ Snow, 🌫 Foggy, 💨 Windy) + optional temperature number input
+Add dependency: `html-to-image`.
 
-Wire values through `SightingFormValues` and pass to save handlers in `new.tsx` and `sighting.$id.tsx`.
+### 3. Sighting: number observed (`src/lib/db.ts`, `SightingForm.tsx`, `sighting.$id.tsx`, `SightingCard.tsx`)
 
-## 4. Sighting detail (`src/routes/sighting.$id.tsx`)
+- Add optional `count?: number` to `Sighting` (default 1). Non-indexed, no migration.
+- Form: small number input next to Rarity ("How many did you see?")
+- Card + detail: show "×3" chip when >1.
+- All aggregate stats that reference "total observations" now sum `count ?? 1` instead of counting rows.
 
-Display the new fields as compact metadata rows: mood emoji, rarity pill (Lifer glows), behavior chips, weather line ("🌤 Sunny · 29°C").
+### 4. Advanced statistics (`src/lib/stats.ts`, `src/routes/profile.tsx`)
 
-## 5. Sighting card (`src/components/SightingCard.tsx`)
+Extend `computeRichStats` with:
+- Monthly sightings (last 6 months as a mini bar chart via styled divs)
+- Weekly activity (7 bars — one per weekday, all-time)
+- Average sightings per week (last 12 weeks)
+- Favorite category (already have "favorite habitat" — rename display to distinguish habitat = top location text vs category = top folder). Keep both.
+- Most observed species (already exists as "most seen species" — keep)
 
-Add small indicators: rarity pill ("Lifer!" gets accent color) and mood emoji next to the favorite star.
+Rendered in a new "Statistics" panel on Profile above the tile grid. Bars are pure CSS (no chart lib).
 
-## 6. Statistics dashboard (`src/routes/profile.tsx`)
+### 5. "On This Day" memories (`src/components/OnThisDay.tsx` new, `src/routes/index.tsx`)
 
-Replace flat number grid with a richer **This Month** panel:
-- Sightings this month with a horizontal bar (proportion vs best month)
-- Most active weekday (e.g. "Saturday")
-- Most seen species
-- Longest streak (days)
-- Favorite habitat (top category by sighting count)
+- On Home, above the timeline: query sightings where the `MM-DD` portion of `date` matches today's `MM-DD` and year < current year.
+- If any exist, show a horizontally scrollable strip of memory cards: thumbnail photo, bird name, date ("2 years ago"), first line of notes, tap → `/sighting/$id`.
+- Hidden entirely when there are no matches (no empty state noise).
 
-Keep the existing 6 stat tiles below as a compact grid.
+### 6. Enhanced search & filters (`src/routes/search.tsx`)
 
-New helper `src/lib/stats.ts` computes all of the above from Dexie in one pass.
+Expand existing filter bar with collapsible "More filters" panel:
+- Habitat (category multi-select) — already partially there, promote to multi
+- Behavior (multi-select chips from `BEHAVIORS`)
+- Weather condition (multi chips from `WEATHER_CONDITIONS`)
+- Number observed (min slider: any / 2+ / 5+ / 10+)
+- Date range (from/to date inputs)
+
+All filters AND-combine. Show active filter count on toggle. "Clear all" resets.
+
+### 7. Empty states + UI polish (cross-cutting)
+
+New `src/components/EmptyState.tsx`: icon + heading + subtext + optional CTA. Used on:
+- Home (no sightings)
+- Search (no results)
+- Achievements (all locked)
+- Favorites filter (none favorited)
+- On This Day is silent when empty
+
+Polish pass:
+- Card shadow tokens softened; radius bumped to `rounded-3xl` for hero cards, `rounded-2xl` elsewhere (already close — audit).
+- Add `animate-fade-in` on route mount for main content wrappers.
+- Consistent lucide icon sizing (`h-4 w-4` inline, `h-5 w-5` in nav).
+- Image gallery in sighting detail: 2-col grid with rounded thumbnails, tap-to-zoom lightbox (simple overlay, no new dep).
+- Dark mode: tighten contrast on chips and progress bars.
+
+---
 
 ## Technical notes
 
-- Dexie v2 upgrade: `this.version(2).stores({...})` — no schema index changes required (new fields aren't indexed), so we can just re-declare version 2 with the same stores string to trigger a no-op upgrade; existing rows keep old shape and reads default missing fields to undefined.
-- All new UI uses existing semantic tokens (`bg-card`, `text-primary`, etc.) — no hardcoded colors.
-- No network: weather is user-tagged, not fetched.
+- **New dep:** `html-to-image` (~15KB, no network, works offline). Used only in ShareCard.
+- **Dexie v3 bump:** add `profile` store, keep existing stores. Non-indexed `count` on Sighting = no migration.
+- **Web Share API:** `navigator.canShare({ files })` — feature-detect, fall back to download.
+- **Aggregations:** switch total-observation counters to sum `count ?? 1`; unique-species count unchanged.
+- **No network calls anywhere** — preserves offline-first.
 
 ## Out of scope
 
-- Auto weather fetch (would require online API + geolocation permission — conflicts with "offline first")
-- Charts library (bar rendered with a styled div for the This Month panel)
+- Cloud sync / accounts (violates privacy-first)
+- Native share to specific apps beyond what Web Share provides
+- Charting library (all bars are styled divs)
+- Push/local notifications

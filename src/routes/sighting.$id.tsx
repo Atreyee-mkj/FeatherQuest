@@ -90,6 +90,7 @@ function SightingDetail() {
             behaviors: sighting.behaviors ?? [],
             weatherCondition: sighting.weather?.condition,
             weatherTempC: sighting.weather?.tempC,
+            count: sighting.count,
           }}
           submitLabel="Save changes"
           onCancel={() => setEditing(false)}
@@ -109,9 +110,11 @@ function SightingDetail() {
               rarity: v.rarity,
               behaviors: v.behaviors.length ? v.behaviors : undefined,
               weather,
+              count: v.count && v.count > 1 ? v.count : undefined,
             });
             setEditing(false);
           }}
+
         />
       </AppShell>
     );

@@ -4,7 +4,15 @@ import { useMemo, useState } from "react";
 import { AppShell, EmptyState, PageHeader } from "@/components/AppShell";
 import { SightingCard } from "@/components/SightingCard";
 import { db, type Sighting, type MediaAsset, type Category } from "@/lib/db";
-import { Search as SearchIcon, Star, Mic, Image as ImageIcon, X } from "lucide-react";
+import { BEHAVIORS, WEATHER_CONDITIONS } from "@/lib/journal-meta";
+import {
+  Search as SearchIcon,
+  Star,
+  Mic,
+  Image as ImageIcon,
+  X,
+  SlidersHorizontal,
+} from "lucide-react";
 
 export const Route = createFileRoute("/search")({
   head: () => ({ meta: [{ title: "Search — FeatherQuest" }] }),
@@ -17,7 +25,13 @@ function SearchPage() {
   const [q, setQ] = useState("");
   const [media, setMedia] = useState<MediaFilter>("all");
   const [favoritesOnly, setFavoritesOnly] = useState(false);
-  const [categoryId, setCategoryId] = useState<number | "all">("all");
+  const [categoryIds, setCategoryIds] = useState<Set<number>>(new Set());
+  const [behaviors, setBehaviors] = useState<Set<string>>(new Set());
+  const [weather, setWeather] = useState<Set<string>>(new Set());
+  const [minCount, setMinCount] = useState<0 | 2 | 5 | 10>(0);
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [advOpen, setAdvOpen] = useState(false);
 
   const sightings =
     useLiveQuery<Sighting[]>(
@@ -53,10 +67,20 @@ function SearchPage() {
   const query = q.trim().toLowerCase();
   const filtered = sightings.filter((s) => {
     if (favoritesOnly && !s.favorite) return false;
-    if (categoryId !== "all" && s.categoryId !== categoryId) return false;
+    if (categoryIds.size > 0 && (!s.categoryId || !categoryIds.has(s.categoryId))) return false;
     const counts = s.id ? mediaBySighting.get(s.id) : undefined;
     if (media === "photos" && !(counts && counts.photos > 0)) return false;
     if (media === "audio" && !(counts && counts.audios > 0)) return false;
+    if (behaviors.size > 0) {
+      const sb = s.behaviors ?? [];
+      if (!sb.some((b) => behaviors.has(b))) return false;
+    }
+    if (weather.size > 0) {
+      if (!s.weather?.condition || !weather.has(s.weather.condition)) return false;
+    }
+    if (minCount > 0 && (s.count ?? 1) < minCount) return false;
+    if (fromDate && s.date < fromDate) return false;
+    if (toDate && s.date > toDate) return false;
     if (query) {
       const hay = `${s.birdName} ${s.notes ?? ""} ${s.date} ${s.location ?? ""}`.toLowerCase();
       if (!hay.includes(query)) return false;
@@ -64,14 +88,41 @@ function SearchPage() {
     return true;
   });
 
+  const advCount =
+    categoryIds.size +
+    behaviors.size +
+    weather.size +
+    (minCount > 0 ? 1 : 0) +
+    (fromDate ? 1 : 0) +
+    (toDate ? 1 : 0);
+
   const hasActive =
-    query || media !== "all" || favoritesOnly || categoryId !== "all";
+    query || media !== "all" || favoritesOnly || advCount > 0;
+
+  function clearAll() {
+    setQ("");
+    setMedia("all");
+    setFavoritesOnly(false);
+    setCategoryIds(new Set());
+    setBehaviors(new Set());
+    setWeather(new Set());
+    setMinCount(0);
+    setFromDate("");
+    setToDate("");
+  }
+
+  function toggleIn<T>(set: Set<T>, v: T, setter: (s: Set<T>) => void) {
+    const next = new Set(set);
+    if (next.has(v)) next.delete(v);
+    else next.add(v);
+    setter(next);
+  }
 
   return (
     <AppShell>
       <PageHeader title="Search" subtitle="Find birds, notes, or dates" />
       <div className="space-y-3 px-5">
-        <div className="flex items-center gap-2 rounded-full border border-border bg-card px-4 py-3">
+        <div className="flex items-center gap-2 rounded-full border border-border bg-card px-4 py-3 shadow-sm">
           <SearchIcon className="h-4 w-4 text-muted-foreground" />
           <input
             value={q}
@@ -96,22 +147,95 @@ function SearchPage() {
           <FilterChip active={favoritesOnly} onClick={() => setFavoritesOnly((v) => !v)}>
             <Star className="h-3.5 w-3.5" /> Favorites
           </FilterChip>
+          <FilterChip active={advOpen} onClick={() => setAdvOpen((v) => !v)}>
+            <SlidersHorizontal className="h-3.5 w-3.5" /> More
+            {advCount > 0 && (
+              <span className="ml-1 rounded-full bg-background/30 px-1.5 text-[10px]">
+                {advCount}
+              </span>
+            )}
+          </FilterChip>
+          {hasActive && (
+            <button
+              type="button"
+              onClick={clearAll}
+              className="text-xs font-semibold text-muted-foreground underline"
+            >
+              Clear all
+            </button>
+          )}
         </div>
 
-        {categories.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            <FilterChip active={categoryId === "all"} onClick={() => setCategoryId("all")}>
-              All categories
-            </FilterChip>
-            {categories.map((c) => (
-              <FilterChip
-                key={c.id}
-                active={categoryId === c.id}
-                onClick={() => setCategoryId(categoryId === c.id ? "all" : c.id!)}
-              >
-                <span aria-hidden>{c.icon}</span> {c.name}
-              </FilterChip>
-            ))}
+        {advOpen && (
+          <div className="space-y-3 rounded-2xl border border-border bg-card/60 p-3 animate-fade-in">
+            {categories.length > 0 && (
+              <FilterGroup label="Habitat">
+                {categories.map((c) => (
+                  <FilterChip
+                    key={c.id}
+                    active={categoryIds.has(c.id!)}
+                    onClick={() =>
+                      toggleIn(categoryIds, c.id!, setCategoryIds)
+                    }
+                  >
+                    <span aria-hidden>{c.icon}</span> {c.name}
+                  </FilterChip>
+                ))}
+              </FilterGroup>
+            )}
+            <FilterGroup label="Behavior">
+              {BEHAVIORS.map((b) => (
+                <FilterChip
+                  key={b.id}
+                  active={behaviors.has(b.id)}
+                  onClick={() => toggleIn(behaviors, b.id, setBehaviors)}
+                >
+                  <span aria-hidden>{b.emoji}</span> {b.label}
+                </FilterChip>
+              ))}
+            </FilterGroup>
+            <FilterGroup label="Weather">
+              {WEATHER_CONDITIONS.map((w) => (
+                <FilterChip
+                  key={w.id}
+                  active={weather.has(w.id)}
+                  onClick={() => toggleIn(weather, w.id, setWeather)}
+                >
+                  <span aria-hidden>{w.emoji}</span> {w.label}
+                </FilterChip>
+              ))}
+            </FilterGroup>
+            <FilterGroup label="Number observed">
+              {[
+                { v: 0, label: "Any" },
+                { v: 2, label: "2+" },
+                { v: 5, label: "5+" },
+                { v: 10, label: "10+" },
+              ].map((o) => (
+                <FilterChip
+                  key={o.v}
+                  active={minCount === o.v}
+                  onClick={() => setMinCount(o.v as 0 | 2 | 5 | 10)}
+                >
+                  {o.label}
+                </FilterChip>
+              ))}
+            </FilterGroup>
+            <FilterGroup label="Date range">
+              <input
+                type="date"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+                className="rounded-xl border border-border bg-card px-3 py-2 text-xs"
+              />
+              <span className="self-center text-xs text-muted-foreground">to</span>
+              <input
+                type="date"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+                className="rounded-xl border border-border bg-card px-3 py-2 text-xs"
+              />
+            </FilterGroup>
           </div>
         )}
       </div>
@@ -141,6 +265,17 @@ function SearchPage() {
         )}
       </div>
     </AppShell>
+  );
+}
+
+function FilterGroup({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+        {label}
+      </p>
+      <div className="flex flex-wrap gap-2">{children}</div>
+    </div>
   );
 }
 

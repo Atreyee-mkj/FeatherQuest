@@ -32,7 +32,7 @@ function NewSighting() {
           behaviors: [],
         }}
         submitLabel="Save sighting"
-        onCancel={() => navigate({ to: "/" })}
+        onCancel={() => navigate({ to: "/app" })}
         extraContent={<PendingMediaSection value={pending} onChange={setPending} />}
         onSubmit={async (v) => {
           const weather =
@@ -73,7 +73,7 @@ function NewSighting() {
               })),
             ]);
           }
-          navigate({ to: "/" });
+          navigate({ to: "/app" });
         }}
       />
     </AppShell>

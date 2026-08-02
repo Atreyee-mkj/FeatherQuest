@@ -79,7 +79,7 @@ function Profile() {
             Achievements
           </h2>
           <Link
-            to="/achievements"
+            to="/app/achievements"
             className="text-xs font-semibold text-primary"
           >
             View all →

@@ -27,7 +27,7 @@ export function SightingCard({
 
   return (
     <Link
-      to="/sighting/$id"
+      to="/app/sighting/$id"
       params={{ id: String(s.id) }}
       className="flex gap-3 rounded-2xl border border-border bg-card p-3 shadow-sm transition-transform active:scale-[0.99]"
     >

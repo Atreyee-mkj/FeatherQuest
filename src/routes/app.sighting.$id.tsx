@@ -8,7 +8,7 @@ import { db, type Sighting } from "@/lib/db";
 import { behaviorOf, moodOf, rarityOf, weatherOf } from "@/lib/journal-meta";
 import { ArrowLeft, Pencil, Star, Trash2 } from "lucide-react";
 
-export const Route = createFileRoute("/sighting/$id")({
+export const Route = createFileRoute("/app/sighting/$id")({
   head: () => ({ meta: [{ title: "Sighting — FeatherQuest" }] }),
   component: SightingDetail,
   notFoundComponent: () => (

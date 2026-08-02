@@ -9,153 +9,159 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SearchRouteImport } from './routes/search'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as NewRouteImport } from './routes/new'
-import { Route as AchievementsRouteImport } from './routes/achievements'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as SightingIdRouteImport } from './routes/sighting.$id'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppSearchRouteImport } from './routes/app.search'
+import { Route as AppProfileRouteImport } from './routes/app.profile'
+import { Route as AppNewRouteImport } from './routes/app.new'
+import { Route as AppAchievementsRouteImport } from './routes/app.achievements'
+import { Route as AppSightingIdRouteImport } from './routes/app.sighting.$id'
 
-const SearchRoute = SearchRouteImport.update({
-  id: '/search',
-  path: '/search',
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/app/',
+  path: '/app/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
+const AppSearchRoute = AppSearchRouteImport.update({
+  id: '/app/search',
+  path: '/app/search',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NewRoute = NewRouteImport.update({
-  id: '/new',
-  path: '/new',
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/app/profile',
+  path: '/app/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AchievementsRoute = AchievementsRouteImport.update({
-  id: '/achievements',
-  path: '/achievements',
+const AppNewRoute = AppNewRouteImport.update({
+  id: '/app/new',
+  path: '/app/new',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AppAchievementsRoute = AppAchievementsRouteImport.update({
+  id: '/app/achievements',
+  path: '/app/achievements',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SightingIdRoute = SightingIdRouteImport.update({
-  id: '/sighting/$id',
-  path: '/sighting/$id',
+const AppSightingIdRoute = AppSightingIdRouteImport.update({
+  id: '/app/sighting/$id',
+  path: '/app/sighting/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/achievements': typeof AchievementsRoute
-  '/new': typeof NewRoute
-  '/profile': typeof ProfileRoute
-  '/search': typeof SearchRoute
-  '/sighting/$id': typeof SightingIdRoute
+  '/app/achievements': typeof AppAchievementsRoute
+  '/app/new': typeof AppNewRoute
+  '/app/profile': typeof AppProfileRoute
+  '/app/search': typeof AppSearchRoute
+  '/app/': typeof AppIndexRoute
+  '/app/sighting/$id': typeof AppSightingIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/achievements': typeof AchievementsRoute
-  '/new': typeof NewRoute
-  '/profile': typeof ProfileRoute
-  '/search': typeof SearchRoute
-  '/sighting/$id': typeof SightingIdRoute
+  '/app/achievements': typeof AppAchievementsRoute
+  '/app/new': typeof AppNewRoute
+  '/app/profile': typeof AppProfileRoute
+  '/app/search': typeof AppSearchRoute
+  '/app': typeof AppIndexRoute
+  '/app/sighting/$id': typeof AppSightingIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/achievements': typeof AchievementsRoute
-  '/new': typeof NewRoute
-  '/profile': typeof ProfileRoute
-  '/search': typeof SearchRoute
-  '/sighting/$id': typeof SightingIdRoute
+  '/app/achievements': typeof AppAchievementsRoute
+  '/app/new': typeof AppNewRoute
+  '/app/profile': typeof AppProfileRoute
+  '/app/search': typeof AppSearchRoute
+  '/app/': typeof AppIndexRoute
+  '/app/sighting/$id': typeof AppSightingIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/achievements'
-    | '/new'
-    | '/profile'
-    | '/search'
-    | '/sighting/$id'
+    | '/app/achievements'
+    | '/app/new'
+    | '/app/profile'
+    | '/app/search'
+    | '/app/'
+    | '/app/sighting/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/achievements' | '/new' | '/profile' | '/search' | '/sighting/$id'
+  to:
+    | '/app/achievements'
+    | '/app/new'
+    | '/app/profile'
+    | '/app/search'
+    | '/app'
+    | '/app/sighting/$id'
   id:
     | '__root__'
-    | '/'
-    | '/achievements'
-    | '/new'
-    | '/profile'
-    | '/search'
-    | '/sighting/$id'
+    | '/app/achievements'
+    | '/app/new'
+    | '/app/profile'
+    | '/app/search'
+    | '/app/'
+    | '/app/sighting/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AchievementsRoute: typeof AchievementsRoute
-  NewRoute: typeof NewRoute
-  ProfileRoute: typeof ProfileRoute
-  SearchRoute: typeof SearchRoute
-  SightingIdRoute: typeof SightingIdRoute
+  AppAchievementsRoute: typeof AppAchievementsRoute
+  AppNewRoute: typeof AppNewRoute
+  AppProfileRoute: typeof AppProfileRoute
+  AppSearchRoute: typeof AppSearchRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppSightingIdRoute: typeof AppSightingIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchRouteImport
+    '/app/': {
+      id: '/app/'
+      path: '/app'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
+    '/app/search': {
+      id: '/app/search'
+      path: '/app/search'
+      fullPath: '/app/search'
+      preLoaderRoute: typeof AppSearchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/new': {
-      id: '/new'
-      path: '/new'
-      fullPath: '/new'
-      preLoaderRoute: typeof NewRouteImport
+    '/app/profile': {
+      id: '/app/profile'
+      path: '/app/profile'
+      fullPath: '/app/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/achievements': {
-      id: '/achievements'
-      path: '/achievements'
-      fullPath: '/achievements'
-      preLoaderRoute: typeof AchievementsRouteImport
+    '/app/new': {
+      id: '/app/new'
+      path: '/app/new'
+      fullPath: '/app/new'
+      preLoaderRoute: typeof AppNewRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/app/achievements': {
+      id: '/app/achievements'
+      path: '/app/achievements'
+      fullPath: '/app/achievements'
+      preLoaderRoute: typeof AppAchievementsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sighting/$id': {
-      id: '/sighting/$id'
-      path: '/sighting/$id'
-      fullPath: '/sighting/$id'
-      preLoaderRoute: typeof SightingIdRouteImport
+    '/app/sighting/$id': {
+      id: '/app/sighting/$id'
+      path: '/app/sighting/$id'
+      fullPath: '/app/sighting/$id'
+      preLoaderRoute: typeof AppSightingIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AchievementsRoute: AchievementsRoute,
-  NewRoute: NewRoute,
-  ProfileRoute: ProfileRoute,
-  SearchRoute: SearchRoute,
-  SightingIdRoute: SightingIdRoute,
+  AppAchievementsRoute: AppAchievementsRoute,
+  AppNewRoute: AppNewRoute,
+  AppProfileRoute: AppProfileRoute,
+  AppSearchRoute: AppSearchRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppSightingIdRoute: AppSightingIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -13,7 +13,7 @@ import { computeRichStats } from "@/lib/stats";
 import { getProfile, updateProfile } from "@/lib/profile";
 import { BADGES } from "@/lib/badges";
 
-export const Route = createFileRoute("/profile")({
+export const Route = createFileRoute("/app/profile")({
   head: () => ({ meta: [{ title: "Profile — FeatherQuest" }] }),
   component: Profile,
 });

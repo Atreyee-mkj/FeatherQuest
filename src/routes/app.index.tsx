@@ -6,7 +6,7 @@ import { OnThisDay } from "@/components/OnThisDay";
 import { db, type Sighting, type Category } from "@/lib/db";
 import { Feather } from "lucide-react";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/app/")({
   head: () => ({
     meta: [
       { title: "FeatherQuest — Your Bird Journal" },

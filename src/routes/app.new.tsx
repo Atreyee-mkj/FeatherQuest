@@ -9,7 +9,7 @@ import {
 } from "@/components/media/MediaSection";
 import { db } from "@/lib/db";
 
-export const Route = createFileRoute("/new")({
+export const Route = createFileRoute("/app/new")({
   head: () => ({ meta: [{ title: "New sighting — FeatherQuest" }] }),
   component: NewSighting,
 });

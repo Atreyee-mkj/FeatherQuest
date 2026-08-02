@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FeatherQuest — Offline</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <style>
+      :root { color-scheme: light dark; }
+      body {
+        margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 1.5rem;
+        font: 16px/1.6 "Nunito Sans", system-ui, -apple-system, sans-serif;
+        background: #f5f3ea; color: #1a3c2a;
+      }
+      .card { max-width: 24rem; text-align: center; }
+      img { width: 112px; height: 112px; }
+      h1 { font-family: Lora, Georgia, serif; font-size: 1.5rem; margin: 1rem 0 .5rem; }
+      p { margin: 0 0 1.5rem; color: #4b5f52; }
+      button {
+        font: inherit; font-weight: 600; padding: .65rem 1.25rem; border: 0; cursor: pointer;
+        border-radius: 999px; background: #1a3c2a; color: #f5f3ea;
+      }
+      @media (prefers-color-scheme: dark) {
+        body { background: #10201a; color: #e8efe9; }
+        p { color: #a8bcb0; }
+        button { background: #7fb98f; color: #10201a; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <img src="/icons/icon-192.png" alt="FeatherQuest" />
+      <h1>You're off the grid</h1>
+      <p>
+        No connection right now — but your journal lives on this device. Pages you've
+        already opened still work, and new sightings save locally.
+      </p>
+      <button onclick="location.reload()">Try again</button>
+    </div>
+  </body>
+</html>

@@ -37,7 +37,9 @@ export default defineConfig({
             {
               // HTML navigations: always try network first, fall back to cache, then offline page.
               urlPattern: ({ request, url }: { request: Request; url: URL }) =>
-                request.mode === "navigate" && !url.pathname.startsWith("/~oauth"),
+                request.mode === "navigate" &&
+                !url.pathname.startsWith("/~oauth") &&
+                (url.pathname === "/app" || url.pathname.startsWith("/app/")),
               handler: "NetworkFirst",
               options: {
                 cacheName: "fq-pages",

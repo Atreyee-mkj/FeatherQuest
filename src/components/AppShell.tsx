@@ -1,6 +1,5 @@
 import { useEffect, type ReactNode } from "react";
 import { BottomNav } from "./BottomNav";
-import { InstallPrompt } from "./InstallPrompt";
 import { seedDefaults } from "@/lib/db";
 import { registerServiceWorker } from "@/lib/register-sw";
 
@@ -13,7 +12,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col bg-background pb-24">
       <main className="flex-1 animate-fade-in">{children}</main>
-      <InstallPrompt />
       <BottomNav />
     </div>
   );

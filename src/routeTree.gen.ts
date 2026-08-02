@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppSearchRouteImport } from './routes/app.search'
 import { Route as AppProfileRouteImport } from './routes/app.profile'
@@ -16,6 +17,11 @@ import { Route as AppNewRouteImport } from './routes/app.new'
 import { Route as AppAchievementsRouteImport } from './routes/app.achievements'
 import { Route as AppSightingIdRouteImport } from './routes/app.sighting.$id'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/app/',
   path: '/app/',
@@ -48,6 +54,7 @@ const AppSightingIdRoute = AppSightingIdRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/app/achievements': typeof AppAchievementsRoute
   '/app/new': typeof AppNewRoute
   '/app/profile': typeof AppProfileRoute
@@ -56,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/app/sighting/$id': typeof AppSightingIdRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/app/achievements': typeof AppAchievementsRoute
   '/app/new': typeof AppNewRoute
   '/app/profile': typeof AppProfileRoute
@@ -65,6 +73,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/app/achievements': typeof AppAchievementsRoute
   '/app/new': typeof AppNewRoute
   '/app/profile': typeof AppProfileRoute
@@ -75,6 +84,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/app/achievements'
     | '/app/new'
     | '/app/profile'
@@ -83,6 +93,7 @@ export interface FileRouteTypes {
     | '/app/sighting/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/app/achievements'
     | '/app/new'
     | '/app/profile'
@@ -91,6 +102,7 @@ export interface FileRouteTypes {
     | '/app/sighting/$id'
   id:
     | '__root__'
+    | '/'
     | '/app/achievements'
     | '/app/new'
     | '/app/profile'
@@ -100,6 +112,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AppAchievementsRoute: typeof AppAchievementsRoute
   AppNewRoute: typeof AppNewRoute
   AppProfileRoute: typeof AppProfileRoute
@@ -110,6 +123,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app/': {
       id: '/app/'
       path: '/app'
@@ -156,6 +176,7 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AppAchievementsRoute: AppAchievementsRoute,
   AppNewRoute: AppNewRoute,
   AppProfileRoute: AppProfileRoute,

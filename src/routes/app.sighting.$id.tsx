@@ -8,14 +8,14 @@ import { db, type Sighting } from "@/lib/db";
 import { behaviorOf, moodOf, rarityOf, weatherOf } from "@/lib/journal-meta";
 import { ArrowLeft, Pencil, Star, Trash2 } from "lucide-react";
 
-export const Route = createFileRoute("/sighting/$id")({
+export const Route = createFileRoute("/app/sighting/$id")({
   head: () => ({ meta: [{ title: "Sighting — FeatherQuest" }] }),
   component: SightingDetail,
   notFoundComponent: () => (
     <AppShell>
       <PageHeader title="Not found" subtitle="This sighting no longer exists" />
       <div className="px-5">
-        <Link to="/" className="text-sm text-primary underline">
+        <Link to="/app" className="text-sm text-primary underline">
           Back to journal
         </Link>
       </div>
@@ -53,7 +53,7 @@ function SightingDetail() {
       <AppShell>
         <PageHeader title="Not found" subtitle="This sighting no longer exists" />
         <div className="px-5">
-          <Link to="/" className="text-sm text-primary underline">
+          <Link to="/app" className="text-sm text-primary underline">
             Back to journal
           </Link>
         </div>
@@ -70,7 +70,7 @@ function SightingDetail() {
     if (!sighting?.id) return;
     await db.media.where("sightingId").equals(sighting.id).delete();
     await db.sightings.delete(sighting.id);
-    navigate({ to: "/" });
+    navigate({ to: "/app" });
   }
 
   if (editing) {
@@ -123,7 +123,7 @@ function SightingDetail() {
   return (
     <AppShell>
       <div className="flex items-center justify-between px-5 pt-4">
-        <Link to="/" className="flex items-center gap-1 text-sm text-muted-foreground">
+        <Link to="/app" className="flex items-center gap-1 text-sm text-muted-foreground">
           <ArrowLeft className="h-4 w-4" /> Journal
         </Link>
         <button

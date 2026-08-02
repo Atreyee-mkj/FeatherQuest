@@ -9,7 +9,7 @@ import {
 } from "@/components/media/MediaSection";
 import { db } from "@/lib/db";
 
-export const Route = createFileRoute("/new")({
+export const Route = createFileRoute("/app/new")({
   head: () => ({ meta: [{ title: "New sighting — FeatherQuest" }] }),
   component: NewSighting,
 });
@@ -32,7 +32,7 @@ function NewSighting() {
           behaviors: [],
         }}
         submitLabel="Save sighting"
-        onCancel={() => navigate({ to: "/" })}
+        onCancel={() => navigate({ to: "/app" })}
         extraContent={<PendingMediaSection value={pending} onChange={setPending} />}
         onSubmit={async (v) => {
           const weather =
@@ -73,7 +73,7 @@ function NewSighting() {
               })),
             ]);
           }
-          navigate({ to: "/" });
+          navigate({ to: "/app" });
         }}
       />
     </AppShell>

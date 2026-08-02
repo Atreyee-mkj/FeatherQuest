@@ -58,7 +58,7 @@ function MemoryCard({ sighting }: { sighting: Sighting }) {
 
   return (
     <Link
-      to="/sighting/$id"
+      to="/app/sighting/$id"
       params={{ id: String(sighting.id) }}
       className="flex w-40 flex-shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-transform active:scale-[0.98]"
     >

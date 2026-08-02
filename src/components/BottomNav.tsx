@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Home, Search, Plus, Trophy, User } from "lucide-react";
 
 type NavItem = {
-  to: "/" | "/search" | "/new" | "/achievements" | "/profile";
+  to: "/app" | "/app/search" | "/app/new" | "/app/achievements" | "/app/profile";
   label: string;
   icon: typeof Home;
   primary?: boolean;
@@ -10,11 +10,11 @@ type NavItem = {
 };
 
 const items: NavItem[] = [
-  { to: "/", label: "Home", icon: Home, exact: true },
-  { to: "/search", label: "Search", icon: Search },
-  { to: "/new", label: "New", icon: Plus, primary: true },
-  { to: "/achievements", label: "Awards", icon: Trophy },
-  { to: "/profile", label: "Profile", icon: User },
+  { to: "/app", label: "Home", icon: Home, exact: true },
+  { to: "/app/search", label: "Search", icon: Search },
+  { to: "/app/new", label: "New", icon: Plus, primary: true },
+  { to: "/app/achievements", label: "Awards", icon: Trophy },
+  { to: "/app/profile", label: "Profile", icon: User },
 ];
 
 export function BottomNav() {

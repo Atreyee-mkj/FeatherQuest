@@ -14,7 +14,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 
-export const Route = createFileRoute("/search")({
+export const Route = createFileRoute("/app/search")({
   head: () => ({ meta: [{ title: "Search — FeatherQuest" }] }),
   component: SearchPage,
 });

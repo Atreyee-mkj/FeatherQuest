@@ -5,7 +5,7 @@ import { AppShell, PageHeader } from "@/components/AppShell";
 import { db, type Badge } from "@/lib/db";
 import { BADGES, evaluateBadges } from "@/lib/badges";
 
-export const Route = createFileRoute("/achievements")({
+export const Route = createFileRoute("/app/achievements")({
   head: () => ({ meta: [{ title: "Achievements — FeatherQuest" }] }),
   component: Achievements,
 });

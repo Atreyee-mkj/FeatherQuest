@@ -128,3 +128,41 @@
     letter-spacing: -0.01em;
   }
 }
+
+/* --- FeatherQuest atmosphere --- */
+:root {
+  --gradient-canopy: linear-gradient(
+    150deg,
+    color-mix(in oklab, var(--primary) 92%, black) 0%,
+    var(--primary) 45%,
+    color-mix(in oklab, var(--accent) 70%, var(--primary)) 100%
+  );
+  --shadow-nest: 0 18px 40px -24px color-mix(in oklab, var(--primary) 55%, transparent);
+}
+
+@utility bg-canopy {
+  background-image: var(--gradient-canopy);
+}
+
+@utility shadow-nest {
+  box-shadow: var(--shadow-nest);
+}
+
+/* Soft feather-speckle texture for hero headers */
+@utility speckle {
+  background-image:
+    radial-gradient(circle at 12% 22%, rgb(255 255 255 / 0.14) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 68% 12%, rgb(255 255 255 / 0.1) 0 2px, transparent 2.5px),
+    radial-gradient(circle at 84% 62%, rgb(255 255 255 / 0.12) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 36% 78%, rgb(255 255 255 / 0.08) 0 2px, transparent 2.5px);
+  background-size: 220px 220px;
+}
+
+@keyframes fq-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@utility animate-rise {
+  animation: fq-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}

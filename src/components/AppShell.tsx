@@ -27,14 +27,19 @@ export function PageHeader({
   right?: ReactNode;
 }) {
   return (
-    <header className="flex items-start justify-between gap-3 px-5 pt-8 pb-4">
-      <div>
-        <h1 className="font-display text-3xl font-semibold leading-tight">{title}</h1>
-        {subtitle && (
-          <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
-        )}
+    <header className="relative mb-5 overflow-hidden rounded-b-[2rem] bg-canopy px-5 pt-9 pb-7 text-primary-foreground shadow-nest">
+      <div className="speckle pointer-events-none absolute inset-0 opacity-70" aria-hidden />
+      <div
+        className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full bg-primary-foreground/10 blur-2xl"
+        aria-hidden
+      />
+      <div className="relative flex items-start justify-between gap-3">
+        <div className="animate-rise">
+          <h1 className="font-display text-3xl font-semibold leading-tight">{title}</h1>
+          {subtitle && <p className="mt-1 text-sm text-primary-foreground/75">{subtitle}</p>}
+        </div>
+        {right}
       </div>
-      {right}
     </header>
   );
 }

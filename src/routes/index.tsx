@@ -496,15 +496,19 @@ function Landing() {
             </ul>
           </div>
           <div className="text-sm">
-            <h3 className="font-semibold">Contact</h3>
-            <ul className="mt-3 space-y-2 text-muted-foreground">
-              <li>
-                <a href="mailto:hello@featherquest.app" className="hover:text-foreground">
-                  hello@featherquest.app
-                </a>
-              </li>
-              <li>Feedback and bug reports welcome.</li>
-            </ul>
+            <h3 className="font-semibold">Feedback &amp; Support</h3>
+            <p className="mt-3 text-muted-foreground">
+              Have a suggestion, found a bug, or need help? We'd love to hear from you.
+            </p>
+            <a
+              href="https://forms.gle/pesHKSpWVVEuBayx7"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 font-semibold transition-colors hover:bg-accent"
+            >
+              Send Feedback
+              <ArrowRight className="h-4 w-4" />
+            </a>
           </div>
         </div>
         <div className="border-t border-border py-5 text-center text-xs text-muted-foreground">

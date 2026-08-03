@@ -51,12 +51,24 @@ export function ShareCardDialog({
   const moreBadges = Math.max(0, unlocked.length - displayBadges.length);
 
   async function render(): Promise<Blob | null> {
-    if (!cardRef.current) return null;
-    const dataUrl = await toPng(cardRef.current, {
-      cacheBust: true,
+    const node = cardRef.current;
+    if (!node) return null;
+    try {
+      await (document as Document & { fonts?: FontFaceSet }).fonts?.ready;
+    } catch {
+      /* fonts API unavailable */
+    }
+    const options = {
+      // Google Fonts CSS is cross-origin; embedding it throws and kills the render.
+      skipFonts: true,
+      cacheBust: false,
       pixelRatio: 2,
+      width: 360,
       backgroundColor: "#0f2418",
-    });
+    } as const;
+    // First pass warms image decoding; the second produces a complete frame.
+    await toPng(node, options);
+    const dataUrl = await toPng(node, options);
     const res = await fetch(dataUrl);
     return await res.blob();
   }

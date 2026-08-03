@@ -423,30 +423,44 @@ function Landing() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Capabilities */}
       <section className="border-y border-border/60 bg-card/40">
         <div className="mx-auto max-w-6xl px-5 py-16 md:py-24">
-          <h2 className="font-display text-3xl font-semibold md:text-4xl">From the field</h2>
-          <p className="mt-3 text-sm text-muted-foreground">
-            Placeholder quotes — swap in real ones once you gather feedback.
+          <h2 className="font-display text-3xl font-semibold md:text-4xl">More than a list</h2>
+          <p className="mt-3 max-w-xl text-sm text-muted-foreground">
+            Sound, images and statistics turn a name and a date into a memory worth keeping.
           </p>
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
-            {testimonials.map((t) => (
-              <figure key={t.quote} className="rounded-2xl border border-border bg-card p-6">
-                <div className="flex gap-0.5 text-primary">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-current" />
-                  ))}
-                </div>
-                <blockquote className="mt-4 text-sm leading-relaxed">"{t.quote}"</blockquote>
-                <figcaption className="mt-4 text-xs text-muted-foreground">
-                  <span className="font-semibold text-foreground">{t.name}</span> · {t.role}
-                </figcaption>
-              </figure>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2">
+            {capabilities.map(({ icon: Icon, title, body }) => (
+              <article key={title} className="rounded-2xl border border-border bg-card p-6">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h3 className="mt-4 font-display text-lg font-semibold">{title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Safety guarantees */}
+      <section id="privacy" className="mx-auto max-w-6xl px-5 py-16 md:py-24">
+        <h2 className="font-display text-3xl font-semibold md:text-4xl">Your data, guaranteed</h2>
+        <p className="mt-3 max-w-xl text-sm text-muted-foreground">
+          FeatherQuest stores your journal in your own browser's local database on your device.
+        </p>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {guarantees.map(({ icon: Icon, title, body }) => (
+            <article key={title} className="rounded-2xl border border-border bg-card p-6">
+              <Icon className="h-6 w-6 text-primary" />
+              <h3 className="mt-4 font-display text-base font-semibold">{title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
 
       {/* FAQ */}
       <section id="faq" className="mx-auto max-w-3xl px-5 py-16 md:py-24">

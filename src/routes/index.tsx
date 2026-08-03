@@ -103,24 +103,49 @@ const benefits = [
   },
 ];
 
-const testimonials = [
+const guarantees = [
   {
-    quote:
-      "I used to lose sightings in a notes app. Now I open FeatherQuest, tap plus, and I'm back to watching in under a minute.",
-    name: "Placeholder Name",
-    role: "Weekend birder, Delhi Ridge",
+    icon: ShieldCheck,
+    title: "No account, ever",
+    body: "There's no sign-up, no email, no password. Open the app and start logging immediately.",
   },
   {
-    quote:
-      "Recording calls next to the photo changed how I review trips. My wetland survey notes finally feel complete.",
-    name: "Placeholder Name",
-    role: "Amateur ornithologist",
+    icon: WifiOff,
+    title: "Nothing is uploaded",
+    body: "Photos, recordings and notes are written to your device's local database — never to a server.",
   },
   {
-    quote:
-      "My students log the schoolyard birds on their own phones. No logins, no data leaving the classroom.",
-    name: "Placeholder Name",
-    role: "Secondary school teacher",
+    icon: Search,
+    title: "Zero tracking",
+    body: "No analytics, no ads, no third-party scripts following you between screens.",
+  },
+  {
+    icon: Download,
+    title: "You own the exit",
+    body: "Export everything as a ZIP whenever you like. Your journal is never locked inside the app.",
+  },
+];
+
+const capabilities = [
+  {
+    icon: Mic,
+    title: "Record the song",
+    body: "Capture calls straight from the field, replay them in the detail view, and keep them attached to the sighting forever.",
+  },
+  {
+    icon: Camera,
+    title: "Photos, plural",
+    body: "Add as many shots as you like per bird — camera or gallery — with thumbnails on the timeline.",
+  },
+  {
+    icon: BarChart3,
+    title: "Shareable stats card",
+    body: "Turn your life list, streak and top species into a poster image you can share in one tap.",
+  },
+  {
+    icon: Star,
+    title: "Memories & badges",
+    body: "\"On This Day\" resurfaces past sightings, while badges track streaks, species counts and habits.",
   },
 ];
 

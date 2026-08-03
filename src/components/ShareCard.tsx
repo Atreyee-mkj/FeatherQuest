@@ -83,8 +83,10 @@ export function ShareCardDialog({
       const a = document.createElement("a");
       a.href = url;
       a.download = `featherquest-${new Date().toISOString().slice(0, 10)}.png`;
+      document.body.appendChild(a);
       a.click();
-      URL.revokeObjectURL(url);
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not render card");
     } finally {
@@ -102,7 +104,7 @@ export function ShareCardDialog({
       const nav = navigator as Navigator & {
         canShare?: (data: ShareData) => boolean;
       };
-      if (nav.canShare && nav.canShare({ files: [file] })) {
+      if (typeof navigator.share === "function" && nav.canShare?.({ files: [file] })) {
         await navigator.share({
           files: [file],
           title: "My FeatherQuest journey",
@@ -173,7 +175,6 @@ export function ShareCardDialog({
                     src={avatarUrl}
                     alt=""
                     style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                    crossOrigin="anonymous"
                   />
                 ) : (
                   <span>🪶</span>

@@ -103,24 +103,49 @@ const benefits = [
   },
 ];
 
-const testimonials = [
+const guarantees = [
   {
-    quote:
-      "I used to lose sightings in a notes app. Now I open FeatherQuest, tap plus, and I'm back to watching in under a minute.",
-    name: "Placeholder Name",
-    role: "Weekend birder, Delhi Ridge",
+    icon: ShieldCheck,
+    title: "No account, ever",
+    body: "There's no sign-up, no email, no password. Open the app and start logging immediately.",
   },
   {
-    quote:
-      "Recording calls next to the photo changed how I review trips. My wetland survey notes finally feel complete.",
-    name: "Placeholder Name",
-    role: "Amateur ornithologist",
+    icon: WifiOff,
+    title: "Nothing is uploaded",
+    body: "Photos, recordings and notes are written to your device's local database — never to a server.",
   },
   {
-    quote:
-      "My students log the schoolyard birds on their own phones. No logins, no data leaving the classroom.",
-    name: "Placeholder Name",
-    role: "Secondary school teacher",
+    icon: Search,
+    title: "Zero tracking",
+    body: "No analytics, no ads, no third-party scripts following you between screens.",
+  },
+  {
+    icon: Download,
+    title: "You own the exit",
+    body: "Export everything as a ZIP whenever you like. Your journal is never locked inside the app.",
+  },
+];
+
+const capabilities = [
+  {
+    icon: Mic,
+    title: "Record the song",
+    body: "Capture calls straight from the field, replay them in the detail view, and keep them attached to the sighting forever.",
+  },
+  {
+    icon: Camera,
+    title: "Photos, plural",
+    body: "Add as many shots as you like per bird — camera or gallery — with thumbnails on the timeline.",
+  },
+  {
+    icon: BarChart3,
+    title: "Shareable stats card",
+    body: "Turn your life list, streak and top species into a poster image you can share in one tap.",
+  },
+  {
+    icon: Star,
+    title: "Memories & badges",
+    body: "\"On This Day\" resurfaces past sightings, while badges track streaks, species counts and habits.",
   },
 ];
 
@@ -398,30 +423,44 @@ function Landing() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Capabilities */}
       <section className="border-y border-border/60 bg-card/40">
         <div className="mx-auto max-w-6xl px-5 py-16 md:py-24">
-          <h2 className="font-display text-3xl font-semibold md:text-4xl">From the field</h2>
-          <p className="mt-3 text-sm text-muted-foreground">
-            Placeholder quotes — swap in real ones once you gather feedback.
+          <h2 className="font-display text-3xl font-semibold md:text-4xl">More than a list</h2>
+          <p className="mt-3 max-w-xl text-sm text-muted-foreground">
+            Sound, images and statistics turn a name and a date into a memory worth keeping.
           </p>
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
-            {testimonials.map((t) => (
-              <figure key={t.quote} className="rounded-2xl border border-border bg-card p-6">
-                <div className="flex gap-0.5 text-primary">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-current" />
-                  ))}
-                </div>
-                <blockquote className="mt-4 text-sm leading-relaxed">"{t.quote}"</blockquote>
-                <figcaption className="mt-4 text-xs text-muted-foreground">
-                  <span className="font-semibold text-foreground">{t.name}</span> · {t.role}
-                </figcaption>
-              </figure>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2">
+            {capabilities.map(({ icon: Icon, title, body }) => (
+              <article key={title} className="rounded-2xl border border-border bg-card p-6">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h3 className="mt-4 font-display text-lg font-semibold">{title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Safety guarantees */}
+      <section id="privacy" className="mx-auto max-w-6xl px-5 py-16 md:py-24">
+        <h2 className="font-display text-3xl font-semibold md:text-4xl">Your data, guaranteed</h2>
+        <p className="mt-3 max-w-xl text-sm text-muted-foreground">
+          FeatherQuest stores your journal in your own browser's local database on your device.
+        </p>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {guarantees.map(({ icon: Icon, title, body }) => (
+            <article key={title} className="rounded-2xl border border-border bg-card p-6">
+              <Icon className="h-6 w-6 text-primary" />
+              <h3 className="mt-4 font-display text-base font-semibold">{title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
 
       {/* FAQ */}
       <section id="faq" className="mx-auto max-w-3xl px-5 py-16 md:py-24">
